@@ -64,7 +64,8 @@ export const uploadAvatarHandler = async (
         avatarUrl = await uploadToSupabase(
           fileBuffer,
           req.file.filename,
-          req.file.mimetype
+          req.file.mimetype,
+          userId
         );
       } catch (err: any) {
         console.warn('Supabase upload fallback to local URL:', err.message);

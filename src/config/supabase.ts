@@ -13,13 +13,15 @@ export const BUCKET_NAME = process.env.SUPABASE_BUCKET || 'uploads';
 export const uploadToSupabase = async (
   fileBuffer: Buffer,
   filename: string,
-  mimeType: string
+  mimeType: string,
+  userId?: string
 ): Promise<string> => {
   if (!SUPABASE_URL || !SUPABASE_KEY || SUPABASE_URL.includes('placeholder')) {
     throw new Error('Supabase URL and API Key must be configured in environment variables.');
   }
 
-  const path = `uploads/${Date.now()}-${filename}`;
+  const userFolder = userId || 'general';
+  const path = `${userFolder}/${Date.now()}-${filename}`;
 
   const { data, error } = await supabase.storage
     .from(BUCKET_NAME)
