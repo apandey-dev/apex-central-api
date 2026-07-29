@@ -10,7 +10,12 @@
       "src": "api/index.ts",
       "use": "@vercel/node",
       "config": {
-        "includeFiles": ["prisma/dev.db", "prisma/schema.prisma"]
+        "includeFiles": [
+          "prisma/dev.db",
+          "prisma/schema.prisma",
+          "dist/routes/**",
+          "src/routes/**"
+        ]
       }
     }
   ],

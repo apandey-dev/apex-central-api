@@ -1,4 +1,14 @@
+import path from 'path';
 import swaggerJsdoc from 'swagger-jsdoc';
+
+const routesGlob = [
+  path.join(process.cwd(), 'src', 'routes', '*.ts'),
+  path.join(process.cwd(), 'dist', 'routes', '*.js'),
+  path.join(__dirname, '..', 'routes', '*.js'),
+  path.join(__dirname, '..', 'routes', '*.ts'),
+  './src/routes/*.ts',
+  './dist/routes/*.js',
+];
 
 const options: swaggerJsdoc.Options = {
   definition: {
@@ -37,7 +47,7 @@ const options: swaggerJsdoc.Options = {
       },
     ],
   },
-  apis: ['./src/routes/*.ts', './src/app.ts'],
+  apis: routesGlob,
 };
 
 export const swaggerSpec = swaggerJsdoc(options);
