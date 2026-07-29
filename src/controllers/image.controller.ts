@@ -4,6 +4,7 @@ import fs from 'fs';
 import { sendSuccess, sendError } from '../utils/response';
 import { uploadToSupabase, supabase, BUCKET_NAME } from '../config/supabase';
 import { AuthenticatedRequest } from '../middleware/auth.middleware';
+import { getBaseUrl } from '../utils/url';
 
 export const getImage = async (req: Request, res: Response) => {
   try {
@@ -63,8 +64,8 @@ export const uploadShortImage = async (
     const ext = path.extname(req.file.originalname) || '.png';
     const shortFileName = `${cleanName}_${Date.now().toString(36)}${ext}`;
 
-    const host = process.env.SERVER_URL || `${req.protocol}://${req.get('host')}`;
-    const shortUrl = `${host}/api/images/${category}/${shortFileName}`;
+    const baseUrl = getBaseUrl(req);
+    const shortUrl = `${baseUrl}/api/images/${category}/${shortFileName}`;
 
     // Upload to Supabase if configured
     if (process.env.SUPABASE_URL && process.env.SUPABASE_ANON_KEY) {

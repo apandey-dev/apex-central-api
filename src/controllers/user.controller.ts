@@ -4,6 +4,7 @@ import { prisma } from '../config/prisma';
 import { sendSuccess, sendError } from '../utils/response';
 import { AuthenticatedRequest } from '../middleware/auth.middleware';
 import { uploadToSupabase } from '../config/supabase';
+import { getBaseUrl } from '../utils/url';
 import fs from 'fs';
 
 export const updateUserSchema = z.object({
@@ -72,10 +73,10 @@ export const uploadAvatarHandler = async (
       }
     }
 
-    // Fallback to local / server static URL if Supabase is not yet linked
+    // Fallback to dynamic host URL
     if (!avatarUrl) {
-      const host = process.env.SERVER_URL || `${req.protocol}://${req.get('host')}`;
-      avatarUrl = `${host}/uploads/${req.file.filename}`;
+      const baseUrl = getBaseUrl(req);
+      avatarUrl = `${baseUrl}/uploads/${req.file.filename}`;
     }
 
     const user = await prisma.user.update({

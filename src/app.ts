@@ -16,6 +16,7 @@ import imageRoutes from './routes/image.routes';
 import { notFoundHandler, errorHandler } from './middleware/error.middleware';
 import { swaggerSpec } from './config/swagger';
 import { sendSuccess } from './utils/response';
+import { getBaseUrl } from './utils/url';
 
 const app: Application = express();
 
@@ -31,14 +32,16 @@ app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 // Swagger Documentation UI
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// Root Endpoint (Welcome Page & Interactive API Portal with Fredoka Font & Clean 4-Column Grid)
+// Root Endpoint (Welcome Page & Interactive API Portal with Fredoka Font & Dynamic Base URL)
 app.get('/', (req, res) => {
+  const baseUrl = getBaseUrl(req);
+
   if (req.headers.accept && req.headers.accept.includes('application/json')) {
     return sendSuccess(res, 'Welcome to Apex Central API', {
       name: 'Apex Central API',
       status: 'online',
-      docs: `${req.protocol}://${req.get('host')}/api-docs`,
-      health: `${req.protocol}://${req.get('host')}/api/health`,
+      docs: `${baseUrl}/api-docs`,
+      health: `${baseUrl}/api/health`,
       endpoints: {
         auth: '/api/auth',
         users: '/api/users',
