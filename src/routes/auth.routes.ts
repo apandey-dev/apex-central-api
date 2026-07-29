@@ -8,7 +8,7 @@ import {
   loginSchema,
   updatePasswordSchema,
 } from '../controllers/auth.controller';
-import { authenticate } from '../middleware/auth.middleware';
+import { authenticate, optionalAuth } from '../middleware/auth.middleware';
 import { validate } from '../middleware/validate.middleware';
 
 const router = Router();
@@ -19,7 +19,9 @@ const router = Router();
  *   post:
  *     tags:
  *       - Auth & Identity
- *     summary: Register a new user
+ *     summary: Register a new user (Restricted to Authorized Admin)
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -46,12 +48,10 @@ const router = Router();
  *     responses:
  *       201:
  *         description: User registered successfully
- *       400:
- *         description: Validation error
- *       409:
- *         description: Email or username already exists
+ *       403:
+ *         description: Registration restricted
  */
-router.post('/register', validate(registerSchema), register);
+router.post('/register', optionalAuth, validate(registerSchema), register);
 
 /**
  * @openapi

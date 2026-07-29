@@ -23,8 +23,20 @@ export const updatePasswordSchema = z.object({
   newPassword: z.string().min(6, 'New password must be at least 6 characters'),
 });
 
-export const register = async (req: Request, res: Response) => {
+export const register = async (req: AuthenticatedRequest, res: Response) => {
   try {
+    // Lock registration to ADMIN only unless explicitly allowed in env
+    const allowPublic = process.env.ALLOW_PUBLIC_REGISTRATION === 'true';
+    const isAdmin = req.user?.role === 'ADMIN';
+
+    if (!allowPublic && !isAdmin) {
+      return sendError(
+        res,
+        'Action restricted: Public account registration is disabled. Only authorized administrator can create accounts.',
+        403
+      );
+    }
+
     const { email, username, password, name } = req.body;
 
     const existingUser = await prisma.user.findFirst({
