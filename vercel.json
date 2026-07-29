@@ -1,5 +1,10 @@
 {
   "version": 2,
+  "env": {
+    "DATABASE_URL": "file:./dev.db",
+    "NODE_ENV": "production",
+    "ALLOW_PUBLIC_REGISTRATION": "false"
+  },
   "builds": [
     {
       "src": "api/index.ts",

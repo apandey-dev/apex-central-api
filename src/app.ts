@@ -515,7 +515,7 @@ app.get('/', (req, res) => {
         <div class="card-top">
           <div class="card-header-row">
             <div class="card-header">🔐 Auth & Identity</div>
-            <a href="/api-docs#/Auth%20%26%20Identity" class="btn-view" target="_blank">Try API ↗</a>
+            <a href="/api-docs#/Auth%20%26%20Identity" class="btn-view">Try API ↗</a>
           </div>
           <p class="card-desc">User registration, login tokens, account profile, and password security.</p>
         </div>
@@ -531,7 +531,7 @@ app.get('/', (req, res) => {
         <div class="card-top">
           <div class="card-header-row">
             <div class="card-header">👤 Profiles & PFP</div>
-            <a href="/api/users" class="btn-view" target="_blank">View Data ↗</a>
+            <a href="/api-docs#/User%20Profiles%20%26%20PFP" class="btn-view">Try API ↗</a>
           </div>
           <p class="card-desc">Profile Picture (PFP) uploads, avatar management, and user profiles.</p>
         </div>
@@ -547,7 +547,7 @@ app.get('/', (req, res) => {
         <div class="card-top">
           <div class="card-header-row">
             <div class="card-header">🖼️ Short Media URLs</div>
-            <a href="/api-docs#/Media%20%26%20Assets" class="btn-view" target="_blank">Try API ↗</a>
+            <a href="/api-docs#/Media%20%26%20Assets" class="btn-view">Try API ↗</a>
           </div>
           <p class="card-desc">Clean, short URLs for logos, SVGs, and images (e.g. /api/images/logos/logo_1).</p>
         </div>
@@ -563,7 +563,7 @@ app.get('/', (req, res) => {
         <div class="card-top">
           <div class="card-header-row">
             <div class="card-header">📝 Task Manager</div>
-            <a href="/api-docs#/Task%20Manager" class="btn-view" target="_blank">Try API ↗</a>
+            <a href="/api-docs#/Task%20Manager" class="btn-view">Try API ↗</a>
           </div>
           <p class="card-desc">Task CRUD, status toggling, priorities, due dates, and completion metrics.</p>
         </div>
@@ -579,7 +579,7 @@ app.get('/', (req, res) => {
         <div class="card-top">
           <div class="card-header-row">
             <div class="card-header">🛍️ Product Catalog</div>
-            <a href="/api/products" class="btn-view" target="_blank">View Data ↗</a>
+            <a href="/api-docs#/Product%20Catalog" class="btn-view">Try API ↗</a>
           </div>
           <p class="card-desc">Products with categories, price range filters, search, and automatic slugging.</p>
         </div>
@@ -595,7 +595,7 @@ app.get('/', (req, res) => {
         <div class="card-top">
           <div class="card-header-row">
             <div class="card-header">💬 Messages</div>
-            <a href="/api-docs#/Messages%20%26%20Support" class="btn-view" target="_blank">Try API ↗</a>
+            <a href="/api-docs#/Messages%20%26%20Support" class="btn-view">Try API ↗</a>
           </div>
           <p class="card-desc">Contact form submissions, user messages, read receipts, and message management.</p>
         </div>
@@ -611,7 +611,7 @@ app.get('/', (req, res) => {
         <div class="card-top">
           <div class="card-header-row">
             <div class="card-header">⚙️ Key-Value Store</div>
-            <a href="/api-docs#/Key-Value%20Storage" class="btn-view" target="_blank">Try API ↗</a>
+            <a href="/api-docs#/Key-Value%20Storage" class="btn-view">Try API ↗</a>
           </div>
           <p class="card-desc">Persistent key-value user storage for app settings, metadata, and JSON state.</p>
         </div>
@@ -627,7 +627,7 @@ app.get('/', (req, res) => {
         <div class="card-top">
           <div class="card-header-row">
             <div class="card-header">📜 Activity Logs</div>
-            <a href="/api-docs#/Activity%20Logs" class="btn-view" target="_blank">Try API ↗</a>
+            <a href="/api-docs#/Activity%20Logs" class="btn-view">Try API ↗</a>
           </div>
           <p class="card-desc">Audit trail logging, event tracking, and system action logs.</p>
         </div>
