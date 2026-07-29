@@ -3,6 +3,8 @@ import { z } from 'zod';
 import { prisma } from '../config/prisma';
 import { sendSuccess, sendError } from '../utils/response';
 import { AuthenticatedRequest } from '../middleware/auth.middleware';
+import { uploadToSupabase } from '../config/supabase';
+import fs from 'fs';
 
 export const updateUserSchema = z.object({
   name: z.string().optional(),
@@ -53,8 +55,27 @@ export const uploadAvatarHandler = async (
       return sendError(res, 'No image file uploaded', 400);
     }
 
-    const host = process.env.SERVER_URL || `${req.protocol}://${req.get('host')}`;
-    const avatarUrl = `${host}/uploads/${req.file.filename}`;
+    let avatarUrl = '';
+
+    // Attempt Supabase Cloud Storage upload if credentials are model-configured
+    if (process.env.SUPABASE_URL && process.env.SUPABASE_ANON_KEY) {
+      try {
+        const fileBuffer = fs.readFileSync(req.file.path);
+        avatarUrl = await uploadToSupabase(
+          fileBuffer,
+          req.file.filename,
+          req.file.mimetype
+        );
+      } catch (err: any) {
+        console.warn('Supabase upload fallback to local URL:', err.message);
+      }
+    }
+
+    // Fallback to local / server static URL if Supabase is not yet linked
+    if (!avatarUrl) {
+      const host = process.env.SERVER_URL || `${req.protocol}://${req.get('host')}`;
+      avatarUrl = `${host}/uploads/${req.file.filename}`;
+    }
 
     const user = await prisma.user.update({
       where: { id: userId },
