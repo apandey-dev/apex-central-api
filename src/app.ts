@@ -13,6 +13,7 @@ import logRoutes from './routes/log.routes';
 import imageRoutes from './routes/image.routes';
 
 import { notFoundHandler, errorHandler } from './middleware/error.middleware';
+import { readOnlyGuard } from './middleware/readOnly.middleware';
 import { swaggerSpec } from './config/swagger';
 import { sendSuccess } from './utils/response';
 import { getBaseUrl } from './utils/url';
@@ -667,6 +668,9 @@ app.get('/api/health', (_req, res) => {
     ],
   });
 });
+
+// Global Read-Only Policy Middleware
+app.use('/api', readOnlyGuard);
 
 // Main API Routes
 app.use('/api/auth', authRoutes);
