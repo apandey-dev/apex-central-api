@@ -11,6 +11,7 @@ import productRoutes from './routes/product.routes';
 import messageRoutes from './routes/message.routes';
 import userDataRoutes from './routes/user-data.routes';
 import logRoutes from './routes/log.routes';
+import imageRoutes from './routes/image.routes';
 
 import { notFoundHandler, errorHandler } from './middleware/error.middleware';
 import { swaggerSpec } from './config/swagger';
@@ -41,6 +42,7 @@ app.get('/', (req, res) => {
       endpoints: {
         auth: '/api/auth',
         users: '/api/users',
+        images: '/api/images',
         todos: '/api/todos',
         products: '/api/products',
         messages: '/api/messages',
@@ -263,7 +265,7 @@ app.get('/', (req, res) => {
     <header>
       <div class="status-badge"><span class="badge-dot"></span> System Operational</div>
       <h1>Apex Central API</h1>
-      <p class="subtitle">High-performance modular backend service for Authentication, Profile & PFP Management, Tasks, Product Catalog, User Messages, Key-Value Settings, and Activity Logging.</p>
+      <p class="subtitle">High-performance modular backend service for Authentication, Profile & PFP Management, Short Image & SVG URLs, Tasks, Product Catalog, User Messages, Key-Value Settings, and Activity Logging.</p>
       
       <div class="action-buttons">
         <a href="/api-docs" class="btn btn-primary">📖 Swagger API Docs</a>
@@ -304,7 +306,23 @@ app.get('/', (req, res) => {
         </div>
       </div>
 
-      <!-- 3. Task Manager -->
+      <!-- 3. Short Image & SVG Assets -->
+      <div class="card">
+        <div class="card-top">
+          <div class="card-header-row">
+            <div class="card-header">🖼️ Short Media URLs</div>
+            <a href="/api-docs#/Media%20%26%20Assets" class="btn-view" target="_blank">Try API ↗</a>
+          </div>
+          <p class="card-desc">Clean, short URLs for logos, SVGs, and images (e.g. /api/images/logos/logo_1).</p>
+        </div>
+        <div class="endpoints-list">
+          <span class="endpoint-tag">GET /api/images/logos/logo_1</span>
+          <span class="endpoint-tag">GET /api/images/avatars/user_1</span>
+          <span class="endpoint-tag">POST /api/images/upload</span>
+        </div>
+      </div>
+
+      <!-- 4. Task Manager -->
       <div class="card">
         <div class="card-top">
           <div class="card-header-row">
@@ -320,7 +338,7 @@ app.get('/', (req, res) => {
         </div>
       </div>
 
-      <!-- 4. Product Catalog -->
+      <!-- 5. Product Catalog -->
       <div class="card">
         <div class="card-top">
           <div class="card-header-row">
@@ -336,7 +354,7 @@ app.get('/', (req, res) => {
         </div>
       </div>
 
-      <!-- 5. Messages & Support -->
+      <!-- 6. Messages & Support -->
       <div class="card">
         <div class="card-top">
           <div class="card-header-row">
@@ -352,7 +370,7 @@ app.get('/', (req, res) => {
         </div>
       </div>
 
-      <!-- 6. Key-Value Storage -->
+      <!-- 7. Key-Value Storage -->
       <div class="card">
         <div class="card-top">
           <div class="card-header-row">
@@ -368,7 +386,7 @@ app.get('/', (req, res) => {
         </div>
       </div>
 
-      <!-- 7. Activity Logs -->
+      <!-- 8. Activity Logs -->
       <div class="card">
         <div class="card-top">
           <div class="card-header-row">
@@ -380,22 +398,6 @@ app.get('/', (req, res) => {
         <div class="endpoints-list">
           <span class="endpoint-tag">POST /api/logs</span>
           <span class="endpoint-tag">GET /api/logs</span>
-        </div>
-      </div>
-
-      <!-- 8. System & Health -->
-      <div class="card">
-        <div class="card-top">
-          <div class="card-header-row">
-            <div class="card-header">⚡ System Health</div>
-            <a href="/api/health" class="btn-view" target="_blank">View Status ↗</a>
-          </div>
-          <p class="card-desc">Real-time health check, uptime, module status, and server metrics.</p>
-        </div>
-        <div class="endpoints-list">
-          <span class="endpoint-tag">GET /api/health</span>
-          <span class="endpoint-tag">GET /api-docs</span>
-          <span class="endpoint-tag">GET /</span>
         </div>
       </div>
     </div>
@@ -420,6 +422,7 @@ app.get('/api/health', (_req, res) => {
     services: [
       'Auth & Identity',
       'User Profiles & PFP Uploads',
+      'Short Image & SVG Asset Proxy',
       'Task Manager',
       'Product Catalog',
       'User Messages & Support',
@@ -432,6 +435,7 @@ app.get('/api/health', (_req, res) => {
 // Main API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/images', imageRoutes);
 app.use('/api/todos', todoRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/messages', messageRoutes);
