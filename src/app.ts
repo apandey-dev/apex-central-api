@@ -39,7 +39,7 @@ app.get('/api-docs.json', (_req, res) => {
   res.send(swaggerSpec);
 });
 
-// Standalone Serverless-Compatible Swagger UI Handler
+// Standalone Serverless-Compatible Swagger UI Handler with Fredoka Font & Dark Theme
 const renderSwaggerUI = (_req: express.Request, res: express.Response) => {
   const html = `<!DOCTYPE html>
 <html lang="en">
@@ -47,16 +47,190 @@ const renderSwaggerUI = (_req: express.Request, res: express.Response) => {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Apex Central API | Swagger Explorer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.18.3/swagger-ui.min.css" />
   <style>
-    html { box-sizing: border-box; overflow-y: scroll; }
-    *, *:before, *:after { box-sizing: inherit; }
-    body { margin: 0; background: #0f172a; color: #f8fafc; }
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+    * { box-sizing: border-box; }
+    
+    body, .swagger-ui, .swagger-ui * {
+      font-family: 'Fredoka', cursive, sans-serif !important;
+    }
+    
+    code, pre, .swagger-ui code, .swagger-ui pre, .swagger-ui .code, .swagger-ui .curl, .swagger-ui .microlight {
+      font-family: 'JetBrains Mono', monospace !important;
+    }
+
+    body {
+      margin: 0;
+      background: #090d16 !important;
+      color: #f8fafc !important;
+    }
+
+    .swagger-ui {
+      background: #090d16 !important;
+      color: #f8fafc !important;
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 1.5rem 1rem;
+    }
+
     .swagger-ui .topbar { display: none !important; }
-    .swagger-ui .info { margin: 20px 0; }
-    .swagger-ui .info .title { color: #818cf8 !important; }
-    .swagger-ui .scheme-container { background: #1e293b !important; box-shadow: none !important; }
-    .swagger-ui select { background: #0f172a !important; color: #f8fafc !important; }
+
+    .swagger-ui .info {
+      margin: 15px 0 25px 0;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 1.5rem 1.75rem;
+      backdrop-filter: blur(12px);
+    }
+
+    .swagger-ui .info .title {
+      color: #a5b4fc !important;
+      font-weight: 700 !important;
+      font-size: 2.2rem !important;
+      margin-bottom: 0.5rem !important;
+    }
+
+    .swagger-ui .info p, .swagger-ui .info li {
+      color: #94a3b8 !important;
+      font-size: 0.95rem !important;
+      line-height: 1.5 !important;
+    }
+
+    .swagger-ui .scheme-container {
+      background: rgba(15, 23, 42, 0.85) !important;
+      border: 1px solid rgba(255, 255, 255, 0.08) !important;
+      border-radius: 14px !important;
+      box-shadow: none !important;
+      padding: 1rem 1.5rem !important;
+      margin-bottom: 1.5rem !important;
+    }
+
+    .swagger-ui .btn.authorize {
+      background: linear-gradient(135deg, #10b981, #059669) !important;
+      color: #ffffff !important;
+      border: none !important;
+      border-radius: 10px !important;
+      font-weight: 600 !important;
+      font-size: 0.9rem !important;
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35) !important;
+      padding: 0.5rem 1.25rem !important;
+    }
+
+    .swagger-ui .btn.authorize svg {
+      fill: #ffffff !important;
+    }
+
+    .swagger-ui .opblock-tag {
+      color: #f8fafc !important;
+      font-weight: 700 !important;
+      font-size: 1.25rem !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+      padding: 0.75rem 0.25rem !important;
+      margin-top: 1.25rem !important;
+    }
+
+    .swagger-ui .opblock-tag small {
+      color: #94a3b8 !important;
+      font-weight: 400 !important;
+    }
+
+    .swagger-ui .opblock {
+      border-radius: 12px !important;
+      border: 1px solid rgba(255, 255, 255, 0.08) !important;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+      background: rgba(15, 23, 42, 0.7) !important;
+      margin-bottom: 0.85rem !important;
+    }
+
+    .swagger-ui .opblock .opblock-summary {
+      padding: 0.75rem 1rem !important;
+    }
+
+    .swagger-ui .opblock .opblock-summary-method {
+      border-radius: 8px !important;
+      font-family: 'Fredoka', sans-serif !important;
+      font-weight: 700 !important;
+      font-size: 0.825rem !important;
+      padding: 0.35rem 0.75rem !important;
+      min-width: 75px !important;
+      text-align: center !important;
+      text-shadow: none !important;
+    }
+
+    .swagger-ui .opblock-get .opblock-summary-method { background: #0284c7 !important; color: #fff !important; }
+    .swagger-ui .opblock-post .opblock-summary-method { background: #059669 !important; color: #fff !important; }
+    .swagger-ui .opblock-put .opblock-summary-method { background: #d97706 !important; color: #fff !important; }
+    .swagger-ui .opblock-delete .opblock-summary-method { background: #dc2626 !important; color: #fff !important; }
+    .swagger-ui .opblock-patch .opblock-summary-method { background: #7c3aed !important; color: #fff !important; }
+
+    .swagger-ui .opblock .opblock-summary-path {
+      color: #f8fafc !important;
+      font-family: 'JetBrains Mono', monospace !important;
+      font-size: 0.9rem !important;
+      font-weight: 600 !important;
+    }
+
+    .swagger-ui .opblock .opblock-summary-description {
+      color: #94a3b8 !important;
+      font-size: 0.85rem !important;
+    }
+
+    .swagger-ui .opblock-body {
+      background: #020617 !important;
+      padding: 1.25rem !important;
+      border-radius: 0 0 12px 12px !important;
+    }
+
+    .swagger-ui table thead tr td, .swagger-ui table thead tr th {
+      color: #cbd5e1 !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+      font-weight: 600 !important;
+    }
+
+    .swagger-ui table tbody tr td {
+      color: #e2e8f0 !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+    }
+
+    .swagger-ui input[type=text], .swagger-ui select, .swagger-ui textarea {
+      background: #090d16 !important;
+      border: 1px solid rgba(255, 255, 255, 0.15) !important;
+      color: #f8fafc !important;
+      border-radius: 8px !important;
+      padding: 0.5rem 0.75rem !important;
+    }
+
+    .swagger-ui .btn.execute {
+      background: linear-gradient(135deg, #6366f1, #4f46e5) !important;
+      color: #ffffff !important;
+      border: none !important;
+      border-radius: 8px !important;
+      font-weight: 600 !important;
+      box-shadow: 0 3px 12px rgba(99, 102, 241, 0.35) !important;
+    }
+
+    .swagger-ui .model-box {
+      background: #090d16 !important;
+      border-radius: 10px !important;
+      border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    }
+
+    .swagger-ui section.models {
+      border: 1px solid rgba(255, 255, 255, 0.08) !important;
+      border-radius: 14px !important;
+      background: rgba(15, 23, 42, 0.85) !important;
+      padding: 1rem !important;
+    }
+
+    .swagger-ui section.models h4 {
+      color: #f8fafc !important;
+    }
   </style>
 </head>
 <body>
