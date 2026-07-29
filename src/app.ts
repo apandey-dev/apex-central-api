@@ -2,7 +2,6 @@ import express, { Application } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import path from 'path';
-import swaggerUi from 'swagger-ui-express';
 
 import authRoutes from './routes/auth.routes';
 import userRoutes from './routes/user.routes';
@@ -20,7 +19,7 @@ import { getBaseUrl } from './utils/url';
 
 const app: Application = express();
 
-// Security and utility middleware (Disable CSP so Swagger CDN assets load seamlessly on Vercel)
+// Security and utility middleware (Disable CSP for Vercel CDN compatibility)
 app.use(
   helmet({
     contentSecurityPolicy: false,
@@ -34,22 +33,63 @@ app.use(express.urlencoded({ extended: true }));
 // Serve uploaded static files (PFP / Avatars)
 app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
-// Swagger Documentation UI with CDN Assets for Vercel Serverless Compatibility
-const swaggerOptions = {
-  customCssUrl:
-    'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.18.3/swagger-ui.min.css',
-  customJs: [
-    'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.18.3/swagger-ui-bundle.js',
-    'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.18.3/swagger-ui-standalone-preset.js',
-  ],
-  customSiteTitle: 'Apex Central API | Swagger Explorer',
+// Serve Raw Swagger JSON spec endpoint
+app.get('/api-docs.json', (_req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.send(swaggerSpec);
+});
+
+// Standalone Serverless-Compatible Swagger UI Handler
+const renderSwaggerUI = (_req: express.Request, res: express.Response) => {
+  const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apex Central API | Swagger Explorer</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.18.3/swagger-ui.min.css" />
+  <style>
+    html { box-sizing: border-box; overflow-y: scroll; }
+    *, *:before, *:after { box-sizing: inherit; }
+    body { margin: 0; background: #0f172a; color: #f8fafc; }
+    .swagger-ui .topbar { display: none !important; }
+    .swagger-ui .info { margin: 20px 0; }
+    .swagger-ui .info .title { color: #818cf8 !important; }
+    .swagger-ui .scheme-container { background: #1e293b !important; box-shadow: none !important; }
+    .swagger-ui select { background: #0f172a !important; color: #f8fafc !important; }
+  </style>
+</head>
+<body>
+  <div id="swagger-ui"></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.18.3/swagger-ui-bundle.js" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.18.3/swagger-ui-standalone-preset.js" crossorigin="anonymous"></script>
+  <script>
+    window.onload = function() {
+      const spec = ${JSON.stringify(swaggerSpec)};
+      SwaggerUIBundle({
+        spec: spec,
+        dom_id: '#swagger-ui',
+        deepLinking: true,
+        presets: [
+          SwaggerUIBundle.presets.apis,
+          SwaggerUIStandalonePreset
+        ],
+        plugins: [
+          SwaggerUIBundle.plugins.DownloadUrl
+        ],
+        layout: "BaseLayout"
+      });
+    };
+  </script>
+</body>
+</html>`;
+
+  res.setHeader('Content-Type', 'text/html');
+  res.send(html);
 };
 
-app.use(
-  '/api-docs',
-  swaggerUi.serve,
-  swaggerUi.setup(swaggerSpec, swaggerOptions)
-);
+app.get('/api-docs', renderSwaggerUI);
+app.get('/api-docs/*', renderSwaggerUI);
 
 // Root Endpoint (Welcome Page & Interactive API Portal with Fredoka Font & Dynamic Base URL)
 app.get('/', (req, res) => {
