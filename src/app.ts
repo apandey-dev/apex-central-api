@@ -20,8 +20,13 @@ import { getBaseUrl } from './utils/url';
 
 const app: Application = express();
 
-// Security and utility middleware
-app.use(helmet({ crossOriginResourcePolicy: false }));
+// Security and utility middleware (Disable CSP so Swagger CDN assets load seamlessly on Vercel)
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+    crossOriginResourcePolicy: false,
+  })
+);
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -29,8 +34,22 @@ app.use(express.urlencoded({ extended: true }));
 // Serve uploaded static files (PFP / Avatars)
 app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
-// Swagger Documentation UI
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+// Swagger Documentation UI with CDN Assets for Vercel Serverless Compatibility
+const swaggerOptions = {
+  customCssUrl:
+    'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.18.3/swagger-ui.min.css',
+  customJs: [
+    'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.18.3/swagger-ui-bundle.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.18.3/swagger-ui-standalone-preset.js',
+  ],
+  customSiteTitle: 'Apex Central API | Swagger Explorer',
+};
+
+app.use(
+  '/api-docs',
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerSpec, swaggerOptions)
+);
 
 // Root Endpoint (Welcome Page & Interactive API Portal with Fredoka Font & Dynamic Base URL)
 app.get('/', (req, res) => {
